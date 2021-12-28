@@ -9,7 +9,7 @@ import torchvision.transforms.functional as TF
 
 from median_cut import median_cut, paint_lines, paint_centroids
 
-PAINT_THICKNESS = 10
+PAINT_THICKNESS = 30
 
 
 def edge_detect(img):
@@ -56,8 +56,12 @@ def generate_svg_lines(img, centroids):
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("input", help="Path to input image")
-parser.add_argument("output", help="Path to save result image to")
+parser.add_argument("input", help="Path to input image", type=str)
+parser.add_argument("output", help="Path to save result image to", type=str)
+parser.add_argument(
+    "iterations", help="Number of iterations to run median cut for", type=int
+)
+parser.add_argument("-d", "--debug", action="store_true", help="Show debug popup")
 
 args = parser.parse_args()
 
@@ -67,13 +71,16 @@ if __name__ == "__main__":
 
     edges = edge_detect(img)
 
-    lines, centroids = median_cut(edges, (0, 0, edges.size(1), edges.size(0)), 13)
+    lines, centroids = median_cut(
+        edges, (0, 0, edges.size(1), edges.size(0)), args.iterations
+    )
 
-    mc_img = paint_lines(edges, lines, PAINT_THICKNESS)
-    mc_img = paint_centroids(mc_img, centroids, PAINT_THICKNESS)
+    if args.debug:
+        mc_img = paint_lines(edges, lines, PAINT_THICKNESS)
+        mc_img = paint_centroids(mc_img, centroids, PAINT_THICKNESS)
 
-    plt.imshow(mc_img)
-    plt.show()
+        plt.imshow(mc_img)
+        plt.show()
 
     with open(args.output, "w") as outfile:
         for svg_line in generate_svg_lines(img, centroids):
