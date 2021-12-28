@@ -11,7 +11,7 @@ from cairosvg import svg2png
 
 from median_cut import median_cut, paint_lines, paint_centroids
 
-PAINT_THICKNESS = 30
+PAINT_THICKNESS = 5
 
 
 def edge_detect(img):
