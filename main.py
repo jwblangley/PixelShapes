@@ -1,3 +1,5 @@
+import argparse
+
 import torch
 from PIL import Image
 
@@ -52,9 +54,15 @@ def generate_svg_lines(img, centroids):
     yield "\n</svg>\n"
 
 
-if __name__ == "__main__":
+parser = argparse.ArgumentParser()
 
-    img = Image.open("picture.jpg")
+parser.add_argument("input", help="Path to input image")
+parser.add_argument("output", help="Path to save result image to")
+
+args = parser.parse_args()
+
+if __name__ == "__main__":
+    img = Image.open(args.input)
     img = TF.to_tensor(img)
 
     edges = edge_detect(img)
@@ -67,6 +75,6 @@ if __name__ == "__main__":
     plt.imshow(mc_img)
     plt.show()
 
-    with open("out.svg", "w") as outfile:
+    with open(args.output, "w") as outfile:
         for svg_line in generate_svg_lines(img, centroids):
             outfile.write(svg_line)
