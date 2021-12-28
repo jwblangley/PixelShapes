@@ -12,8 +12,8 @@ def calculate_centroid(img, bbox):
     cdf = pdf.cumsum(0)
 
     split_index = np.where(cdf >= 0.5)[0][0]
-    split_y = split_index // subimg.size(0)
-    split_x = split_index % subimg.size(0)
+    split_y = split_index // subimg.size(1)
+    split_x = split_index % subimg.size(1)
 
     return (x1 + split_x, y1 + split_y, bbox)
 
