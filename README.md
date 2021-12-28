@@ -23,3 +23,7 @@ optional arguments:
   -bg BACKGROUND, --background BACKGROUND
                         SVG colour for the background. Transparent by default
 ```
+
+## Examples
+![St Paul's Cathedral](examples/stpaul.svg)
+![Rosa the Dog](examples/rosa.png)
