@@ -45,10 +45,13 @@ def centroid_to_shape(img, centroid):
     return svg_line
 
 
-def generate_svg_lines(img, centroids):
+def generate_svg_lines(img, centroids, bg=None):
     yield f"""<svg version="1.1"
     width="{img.size(2)}" height="{img.size(1)}"
     xmlns="http://www.w3.org/2000/svg">\n\n"""
+
+    if bg is not None:
+        yield f'\t<rect x="0" y="0" width="{img.size(2)}" height="{img.size(1)}" fill="{bg}" />\n'
 
     for centroid in centroids:
         yield f"\t{centroid_to_shape(img, centroid)}\n"
@@ -65,6 +68,13 @@ parser.add_argument(
 )
 parser.add_argument("-d", "--debug", action="store_true", help="Show debug popup")
 parser.add_argument("-r", "--rasterize", action="store_true", help="Show debug popup")
+parser.add_argument(
+    "-bg",
+    "--background",
+    type=str,
+    help="SVG colour for the background. Transparent by default",
+    default=None,
+)
 
 args = parser.parse_args()
 
@@ -87,7 +97,8 @@ if __name__ == "__main__":
 
     if args.rasterize:
         svg2png(
-            bytestring="".join(generate_svg_lines(img, centroids)), write_to=args.output
+            bytestring="".join(generate_svg_lines(img, centroids, bg=args.background)),
+            write_to=args.output,
         )
     else:
         with open(args.output, "w") as outfile:
