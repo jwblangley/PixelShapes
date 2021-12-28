@@ -25,22 +25,29 @@ def edge_detect(img):
     return img
 
 
+def centroid_to_shape(img, centroid):
+    _, _, bbox = centroid
+    x1, y1, x2, y2 = bbox
+    col = img[:, y1:y2, x1:x2].flatten(1).mean(dim=1) * 255
+
+    cx = x1 + (x2 - x1) // 2
+    cy = y1 + (y2 - y1) // 2
+    r = min(x2 - x1, y2 - y1) // 2
+    col = col.int()
+
+    svg_line = (
+        f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="rgb({col[0]},{col[1]},{col[2]})" />'
+    )
+    return svg_line
+
+
 def generate_svg_lines(img, centroids):
     yield f"""<svg version="1.1"
     width="{img.size(2)}" height="{img.size(1)}"
     xmlns="http://www.w3.org/2000/svg">\n\n"""
 
     for centroid in centroids:
-        _, _, bbox = centroid
-        x1, y1, x2, y2 = bbox
-        col = img[:, y1:y2, x1:x2].flatten(1).mean(dim=1) * 255
-
-        cx = x1 + (x2 - x1) // 2
-        cy = y1 + (y2 - y1) // 2
-        r = min(x2 - x1, y2 - y1) // 2
-        col = col.int()
-
-        yield f'\t<circle cx="{cx}" cy="{cy}" r="{r}" fill="rgb({col[0]},{col[1]},{col[2]})" />\n'
+        yield f"\t{centroid_to_shape(img, centroid)}\n"
 
     yield "\n</svg>\n"
 
