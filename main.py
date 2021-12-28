@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 
 import torchvision.transforms.functional as TF
 
+from cairosvg import svg2png
+
 from median_cut import median_cut, paint_lines, paint_centroids
 
 PAINT_THICKNESS = 30
@@ -62,6 +64,7 @@ parser.add_argument(
     "iterations", help="Number of iterations to run median cut for", type=int
 )
 parser.add_argument("-d", "--debug", action="store_true", help="Show debug popup")
+parser.add_argument("-r", "--rasterize", action="store_true", help="Show debug popup")
 
 args = parser.parse_args()
 
@@ -82,6 +85,11 @@ if __name__ == "__main__":
         plt.imshow(mc_img)
         plt.show()
 
-    with open(args.output, "w") as outfile:
-        for svg_line in generate_svg_lines(img, centroids):
-            outfile.write(svg_line)
+    if args.rasterize:
+        svg2png(
+            bytestring="".join(generate_svg_lines(img, centroids)), write_to=args.output
+        )
+    else:
+        with open(args.output, "w") as outfile:
+            for svg_line in generate_svg_lines(img, centroids):
+                outfile.write(svg_line)
