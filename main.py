@@ -67,7 +67,12 @@ parser.add_argument(
     "iterations", help="Number of iterations to run median cut for", type=int
 )
 parser.add_argument("-d", "--debug", action="store_true", help="Show debug popup")
-parser.add_argument("-r", "--rasterize", action="store_true", help="Show debug popup")
+parser.add_argument(
+    "-r",
+    "--rasterize",
+    action="store_true",
+    help="Rasterize the vector graphics to png",
+)
 parser.add_argument(
     "-bg",
     "--background",
