@@ -107,24 +107,25 @@ def manipulate_svg(svg, box_x, box_y, box_width, box_height, col):
             # Style
             style = elem.get("style")
             if style is not None:
+                # Fill
                 re_fill = re.compile(r"fill:(.+?)(;|$)")
-                re_stroke = re.compile(r"stroke:(.+?)(;|$)")
-
-                fill = re.match(re_fill, style)
+                fill = re_fill.search(style)
                 if (
                     fill is not None
                     and fill.group(1).lower() != "none"
                     and fill.group(1).lower() != "transparent"
                 ):
-                    style = re.sub(re_fill, rf"fill:{col_str}\g<2>", style)
+                    style = re_fill.sub(rf"fill:{col_str}\g<2>", style)
 
-                stroke = re.match(re_stroke, style)
+                # Stroke
+                re_stroke = re.compile(r"stroke:(.+?)(;|$)")
+                stroke = re_stroke.search(style)
                 if (
                     stroke is not None
                     and stroke.group(1).lower() != "none"
                     and stroke.group(1).lower() != "transparent"
                 ):
-                    style = re.sub(re_stroke, rf"stroke:{col_str}\g<2>", style)
+                    style = re_stroke.sub(rf"stroke:{col_str}\g<2>", style)
 
                 elem.set("style", style)
 
