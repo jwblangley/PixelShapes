@@ -9,12 +9,13 @@ pip install -r requirements.txt
 
 ## Usage
 ```
-usage: main.py [-h] [-d] [-r] [-bg BACKGROUND] input output iterations
+usage: main.py [-h] [-d] [-r] [-bg BACKGROUND] input shape iterations output
 
 positional arguments:
   input                 Path to input image
-  output                Path to save result image to
+  shape                 Path to svg shape
   iterations            Number of iterations to run median cut for
+  output                Path to save result image to
 
 optional arguments:
   -h, --help            show this help message and exit
