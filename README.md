@@ -1,5 +1,5 @@
 # PixelShapes
-Using a target image, generate an art piece comprised of a series of carefully placed shapes of various sizes
+Using a target image, generate an art piece comprised of a series of carefully-placed chosen shapes of various sizes.
 
 ## Installation
 In a virtual environment (recommended) or otherwise, install the dependencies.
