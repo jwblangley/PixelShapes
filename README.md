@@ -26,5 +26,6 @@ optional arguments:
 ```
 
 ## Examples
+![Rosa the Dog](examples/rosa_paws.png)
 ![St Paul's Cathedral](examples/stpaul.svg)
 ![Rosa the Dog](examples/rosa.png)
