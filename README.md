@@ -27,5 +27,6 @@ optional arguments:
 
 ## Examples
 ![Rosa the Dog](examples/rosa_paws.png)
+![Couple](examples/couple.png)
 ![St Paul's Cathedral](examples/stpaul.svg)
 ![Rosa the Dog](examples/rosa_circles.png)
