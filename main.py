@@ -36,7 +36,7 @@ def edge_detect(img):
     return img
 
 
-def manipulate_svg(svg, x, y, width, height, col):
+def manipulate_svg(svg, box_x, box_y, box_width, box_height, col):
     ET.register_namespace("", XML_NAMESPACE)
     root = ET.fromstring(svg)
     assert root.tag.endswith("svg"), "Shape is not an svg"
@@ -46,24 +46,34 @@ def manipulate_svg(svg, x, y, width, height, col):
     assert shape_width is not None, "Shape SVG does not have a 'width' attribute"
     assert shape_height is not None, "Shape SVG does not have a 'height' attribute"
 
+    shape_width = float(shape_width.replace("pt", ""))
+    shape_height = float(shape_height.replace("pt", ""))
+
     # Set location and size
-    root.set("x", f"{x}")
-    root.set("y", f"{y}")
-    root.set("width", f"{width}")
-    root.set("height", f"{height}")
+
+    # Due to cairosvg limitations during rasterization, nested SVG centering must be done manually.
+    # This can otherwise be achieved with just x, y and viewBox
+    limiting_width = box_width / shape_width < box_height / shape_height
+
+    new_shape_width = (
+        box_width if limiting_width else shape_width * (box_height / shape_height)
+    )
+    new_shape_height = (
+        shape_height * (box_width / shape_width) if limiting_width else box_height
+    )
+
+    new_shape_x = box_x + (box_width - new_shape_width) // 2
+    new_shape_y = box_y + (box_height - new_shape_height) // 2
+
+    root.set("x", f"{new_shape_x}")
+    root.set("y", f"{new_shape_y}")
+    root.set("width", f"{new_shape_width}")
+    root.set("height", f"{new_shape_height}")
     root.set(
         "viewBox",
-        f"0 0 {shape_width.replace('pt', '')} {shape_height.replace('pt','')}",
+        f"0 0 {shape_width} {shape_height}",
     )
     root.set("preserveAspectRatio", "meet")
-
-    rect = ET.Element("rect")
-    rect.set("width", "100%")
-    rect.set("height", "100%")
-    rect.set("fill", "red")
-    rect.set("stroke", "blue")
-    rect.set("stroke-width", "20")
-    root.insert(0, rect)
 
     # Re-colour
     col_str = f"rgb({col[0]},{col[1]},{col[2]})"
