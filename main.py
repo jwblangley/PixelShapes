@@ -46,8 +46,8 @@ def manipulate_svg(svg, box_x, box_y, box_width, box_height, col):
     assert shape_width is not None, "Shape SVG does not have a 'width' attribute"
     assert shape_height is not None, "Shape SVG does not have a 'height' attribute"
 
-    shape_width = float(shape_width.replace("pt", ""))
-    shape_height = float(shape_height.replace("pt", ""))
+    shape_width = float(re.sub(r"[^\d|\.]", "", shape_width))
+    shape_height = float(re.sub(r"[^\d|\.]", "", shape_height))
 
     # Set location and size
 
